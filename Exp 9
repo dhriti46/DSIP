@@ -1,0 +1,132 @@
+#1
+from google.colab import files
+
+uploaded = files.upload()
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+image = cv2.imread('image2.jpeg')
+
+if image is None:
+    print("Image not found. Check the file name.")
+else:
+    print("Image loaded successfully!")
+    cv2_imshow(image)
+
+#2
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Load the image
+image = cv2.imread('image2.jpeg')
+
+# Gaussian kernel for smoothing
+kernel_size = (5, 5)
+sigma = 1.5
+
+gaussian_kernel = cv2.getGaussianKernel(5, sigma)
+gassian_kernel = np.outer(gaussian_kernel, gaussian_kernel)
+
+# Apply Gaussian smoothing
+smoothed_image = cv2.filter2D(image, -1, gaussian_kernel)
+
+# Sharpening kernel
+sharpening_kernel = np.array([
+    [-1, -1, -1],
+    [-1,  9, -1],
+    [-1, -1, -1]
+])
+
+# Apply sharpening
+sharpened_image = cv2.filter2D(image, -1, sharpening_kernel)
+
+# Display images
+print("Original Image")
+cv2_imshow(image)
+
+print("Smoothed Image")
+cv2_imshow(smoothed_image)
+
+print("Sharpened Image")
+cv2_imshow(sharpened_image)
+
+#3
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Load the image
+image = cv2.imread('image2.jpeg') 
+
+# Define averaging filter size
+kernel_size = (5, 5)
+
+# Create averaging kernel
+kernel = np.ones(kernel_size, dtype=np.float32) / 25
+
+# Apply averaging filter
+smoothed_image = cv2.filter2D(image, -1, kernel)
+
+# Display images
+print("Original Image")
+cv2_imshow(image)
+
+print("Averaged / Smoothed Image")
+cv2_imshow(smoothed_image)
+
+#4
+import cv2
+from google.colab.patches import cv2_imshow
+
+# Load the image
+image = cv2.imread('image2.jpeg')
+
+# Median filter size
+kernel_size = 5
+
+# Apply median filter
+smoothed_image = cv2.medianBlur(image, kernel_size)
+
+# Display images
+print("Original Image")
+cv2_imshow(image)
+
+print("Median Filtered Image")
+cv2_imshow(smoothed_image)
+
+#5
+import cv2
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Load the image
+image = cv2.imread('image2.jpeg')
+
+# Apply Gaussian smoothing
+blurred_image = cv2.GaussianBlur(image, (5, 5), 0)
+
+# Laplacian/high-pass sharpening kernel
+laplacian_kernel = np.array([
+    [0, -1, 0],
+    [-1, 5, -1],
+    [0, -1, 0]
+], dtype=np.float32)
+
+# Apply sharpening
+sharpened_image = cv2.filter2D(
+    blurred_image,
+    -1,
+    laplacian_kernel
+)
+
+# Display images
+print("Original Image")
+cv2_imshow(image)
+
+print("Blurred Image")
+cv2_imshow(blurred_image)
+
+print("Sharpened Image")
+cv2_imshow(sharpened_image)
