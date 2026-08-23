@@ -1,0 +1,138 @@
+#1
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+from google.colab import files
+
+
+# Upload the image
+print("Please upload your image file (e.g., IMG_20230915_135931789.jpg)")
+uploaded = files.upload()
+
+
+if not uploaded:
+   print("No file uploaded.")
+else:
+# Get the filename
+   image_path = list(uploaded.keys())[0]
+   image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+
+
+   if image is None:
+       print(f"Error: Could not load image from {image_path}")
+   else:
+       print(f"Image '{image_path}' loaded successfully.")
+      
+       # Calculate and Plot Histogram
+       histogram = cv2.calcHist([image], [0], None, [256], [0, 256])
+       plt.figure(figsize=(8, 4))
+       plt.title('Original Histogram')
+       plt.plot(histogram)
+       plt.xlim([0, 256])
+       plt.show()
+
+
+       # Perform histogram equalization
+       equalized_image = cv2.equalizeHist(image)
+
+
+       # Display Results
+       plt.figure(figsize=(12, 6))
+       plt.subplot(1, 2, 1)
+       plt.title('Original Image')
+       plt.imshow(image, cmap='gray')
+       plt.axis('off')
+
+
+       plt.subplot(1, 2, 2)
+       plt.title('Equalized Image')
+       plt.imshow(equalized_image, cmap='gray')
+       plt.axis('off')
+       plt.show()
+
+
+       # Histogram of Equalized Image
+       hist_eq = cv2.calcHist([equalized_image], [0], None, [256], [0, 256])
+       plt.figure(figsize=(8, 4))
+       plt.title('Equalized Histogram')
+       plt.plot(hist_eq)
+       plt.xlim([0, 256])
+       plt.show()
+
+
+
+#2
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+from google.colab import files
+
+# Upload source and reference images
+uploaded = files.upload()
+
+# Get uploaded image names
+image_names = list(uploaded.keys())
+
+# Check if enough images were uploaded
+if len(image_names) < 2:
+    raise ValueError("Not enough images uploaded. Please upload at least two images: one for the source and one for the reference.")
+
+# First image = source image
+source_path = image_names[0]
+
+# Second image = reference image
+reference_path = image_names[1]
+
+# Load images in grayscale
+source_image = cv2.imread(source_path, cv2.IMREAD_GRAYSCALE)
+reference_image = cv2.imread(reference_path, cv2.IMREAD_GRAYSCALE)
+
+# Calculate histograms
+source_hist = cv2.calcHist(
+    [source_image], [0], None, [256], [0, 256]
+)
+
+reference_hist = cv2.calcHist(
+    [reference_image], [0], None, [256], [0, 256]
+)
+
+# Normalize histograms
+source_hist /= source_hist.sum()
+reference_hist /= reference_hist.sum()
+
+# Calculate CDFs
+source_cdf = source_hist.cumsum()
+reference_cdf = reference_hist.cumsum()
+
+# Perform histogram matching
+mapping = np.interp(
+    source_cdf,
+    reference_cdf,
+    range(256)
+)
+
+matched_image = mapping[source_image]
+
+# Convert to uint8
+matched_image = matched_image.astype(np.uint8)
+
+# Display images
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 3, 1)
+plt.title('Source Image')
+plt.imshow(source_image, cmap='gray')
+plt.axis('off')
+
+plt.subplot(1, 3, 2)
+plt.title('Reference Image')
+plt.imshow(reference_image, cmap='gray')
+plt.axis('off')
+
+plt.subplot(1, 3, 3)
+plt.title('Matched Image')
+plt.imshow(matched_image, cmap='gray')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
