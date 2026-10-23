@@ -1,0 +1,48 @@
+import cv2
+import numpy as np
+from google.colab import files
+from google.colab.patches import cv2_imshow
+
+# 1. Upload image
+uploaded = files.upload()
+
+# 2. Load the uploaded image in grayscale
+image_name = next(iter(uploaded))
+image = cv2.imdecode(
+    np.frombuffer(uploaded[image_name], np.uint8),
+    cv2.IMREAD_GRAYSCALE
+)
+
+if image is None:
+    raise ValueError("Please upload a valid image.")
+
+# 3. Define the kernel (structuring element)
+kernel = np.ones((5, 5), np.uint8)
+
+# 4. Perform Erosion
+erosion = cv2.erode(image, kernel, iterations=1)
+
+# 5. Perform Dilation
+dilation = cv2.dilate(image, kernel, iterations=1)
+
+# 6. Perform Opening (Erosion followed by Dilation)
+opening = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
+
+# 7. Perform Closing (Dilation followed by Erosion)
+closing = cv2.morphologyEx(image, cv2.MORPH_CLOSE, kernel)
+
+# 8. Display the original image and results
+print("Original Image")
+cv2_imshow(image)
+
+print("Erosion")
+cv2_imshow(erosion)
+
+print("Dilation")
+cv2_imshow(dilation)
+
+print("Opening")
+cv2_imshow(opening)
+
+print("Closing")
+cv2_imshow(closing)
