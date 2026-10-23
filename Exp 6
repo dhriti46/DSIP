@@ -1,0 +1,158 @@
+#A
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import firwin, freqz
+
+
+Fs = 10000
+Fc = 3000
+N = 31
+
+
+# Design FIR Low-Pass Filter
+b = firwin(
+   numtaps=N,
+   cutoff=Fc,
+   window='hann',
+   pass_zero='lowpass',
+   fs=Fs
+)
+
+
+# Frequency response
+f, H = freqz(b, worN=2048, fs=Fs)
+magnitude_db = 20 * np.log10(np.maximum(np.abs(H), 1e-10))
+
+
+plt.figure(figsize=(10, 5))
+plt.plot(f, magnitude_db)
+plt.title('FIR Low-Pass Filter using Hann Window')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True)
+plt.xlim(0, Fs/2)
+plt.show()
+
+
+print("Low-pass filter coefficients:")
+print(b)
+
+
+#B
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import firwin, freqz
+
+
+Fs = 10000
+Fc = 3000
+N = 31
+
+
+# Design FIR High-Pass Filter
+b = firwin(
+   numtaps=N,
+   cutoff=Fc,
+   window='hann',
+   pass_zero='highpass',
+   fs=Fs
+)
+
+
+# Frequency response
+f, H = freqz(b, worN=2048, fs=Fs)
+magnitude_db = 20 * np.log10(np.maximum(np.abs(H), 1e-10))
+
+
+plt.figure(figsize=(10, 5))
+plt.plot(f, magnitude_db)
+plt.title('FIR High-Pass Filter using Hann Window')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True)
+plt.xlim(0, Fs/2)
+plt.show()
+
+
+print("High-pass filter coefficients:")
+print(b)
+
+#C
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import firwin, freqz
+
+
+Fs = 10000
+Fc1 = 3000
+Fc2 = 4900  # Valid upper cutoff below Nyquist
+N = 31
+
+
+# Design FIR Band-Pass Filter
+b = firwin(
+   numtaps=N,
+   cutoff=[Fc1, Fc2],
+   window='hann',
+   pass_zero='bandpass',
+   fs=Fs
+)
+
+
+# Frequency response
+f, H = freqz(b, worN=2048, fs=Fs)
+magnitude_db = 20 * np.log10(np.maximum(np.abs(H), 1e-10))
+
+
+plt.figure(figsize=(10, 5))
+plt.plot(f, magnitude_db)
+plt.title('FIR Band-Pass Filter using Hann Window')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True)
+plt.xlim(0, Fs/2)
+plt.show()
+
+
+print("Band-pass filter coefficients:")
+print(b)
+
+#D
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import firwin, freqz
+
+
+Fs = 10000
+Fc1 = 3000
+Fc2 = 4900  # Valid upper cutoff below Nyquist
+N = 31
+
+
+# Design FIR Band-Stop Filter
+b = firwin(
+   numtaps=N,
+   cutoff=[Fc1, Fc2],
+   window='hann',
+   pass_zero='bandstop',
+   fs=Fs
+)
+
+
+# Frequency response
+f, H = freqz(b, worN=2048, fs=Fs)
+magnitude_db = 20 * np.log10(np.maximum(np.abs(H), 1e-10))
+
+
+plt.figure(figsize=(10, 5))
+plt.plot(f, magnitude_db)
+plt.title('FIR Band-Stop Filter using Hann Window')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Magnitude (dB)')
+plt.grid(True)
+plt.xlim(0, Fs/2)
+plt.show()
+
+
+print("Band-stop filter coefficients:")
+print(b)
